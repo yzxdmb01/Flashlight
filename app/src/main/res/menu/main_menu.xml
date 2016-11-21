@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_run_on_bg"
+        android:checkable="true"
+        android:title="后台运行"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_timing_off"
+        android:checkable="true"
+        android:icon="@mipmap/ic_launcher"
+        android:title="自动关闭"
+        app:showAsAction="never" />
+</menu>
