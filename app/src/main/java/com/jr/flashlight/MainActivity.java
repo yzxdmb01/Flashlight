@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean hasFlash = false;
     private Handler handler;
     private Runnable r;
-    private int closeTime = 1000 * 5;
+    private int closeTime = 1000 * 60 * 10;
     private boolean runOnBg = false; //后台运行
     private boolean timingOff = true; //定时关闭
 
@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initView() {
         btnSwitch = (ToggleButton) findViewById(R.id.btn_switch);
+        btnSwitch.setChecked(SharedPreferencesUtils.getInt("isOpen") == 1);
         btnSwitch.setOnClickListener(this);
         r = new Runnable() {
             @Override
@@ -112,18 +113,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cancelCloseDelay(); //取消掉定时关闭
         //关
         if (camera == null || params == null) {
+            finish();
             return;
         }
         try {
             params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             camera.setParameters(params);
             camera.stopPreview();
-            btnSwitch.setChecked(false);
-            SharedPreferencesUtils.put("isOpen", 0);
-            finish();
         } catch (Exception e) {
             Log.i("warning", "关不掉");
         }
+        SharedPreferencesUtils.put("isOpen", 0);
+        btnSwitch.setChecked(false);
+        finish();
     }
 
     /**
@@ -169,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         hasFlash = getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         if (!hasFlash) return;
         Log.i("信息", "camera:" + camera);
-        if (camera == null) {
+        if (camera == null && SharedPreferencesUtils.getInt("isOpen") != 1) {
             camera = Camera.open();
             params = camera.getParameters();
         }
